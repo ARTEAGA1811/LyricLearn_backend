@@ -8,10 +8,10 @@ const getLyricsController = async (req: Request, res: Response) => {
     try {
         const {artistName, title} = req.body;
         const musixmatchApi = new MusixmatchLyricsService();
-        const geniusApi = new GeniusLyricsService();
-        //const lyrics = await getLyrics(artistName, title);
-        const lyrics = await geniusApi.getLyrics(artistName, title);
-        //const lyrics = await musixmatchApi.getLyrics(artistName, title);
+        //const geniusApi = new GeniusLyricsService();
+
+        //const lyrics = await geniusApi.getLyrics(artistName, title);
+        const lyrics = await musixmatchApi.getLyrics(artistName, title);
         res.status(httpStatus.ACCEPTED);
         res.send(lyrics);
     } catch (e) {

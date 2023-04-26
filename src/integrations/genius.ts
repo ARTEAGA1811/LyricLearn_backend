@@ -28,16 +28,16 @@ const getLyricsUrl = async (artistName: string, title: string): Promise<string |
     });
     const lyricsList = responseInfo.data.response.hits;
 
-    //Se filtra solo canciones en inglés
-    const lyricsListFiltered = lyricsList.filter((lyrics: any) => {
-        return lyrics.result.language === 'en';
-    });
+    // //Se filtra solo canciones en inglés
+    // const lyricsListFiltered = lyricsList.filter((lyrics: any) => {
+    //     return lyrics.result.language === 'en';
+    // });
 
-    if (lyricsListFiltered.length === 0) {
+    if (lyricsList.length === 0) {
         return null;
     }
 
-    return lyricsListFiltered[0].result.url;
+    return lyricsList[0].result.url;
 }
 
 export {getLyricsUrl}
