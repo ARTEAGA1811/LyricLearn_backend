@@ -1,4 +1,4 @@
-import {getLyricsUrl} from "../integrations/genius";
+import {getLyricsUrl} from "../../integrations/genius";
 import axios from "axios";
 import {AnyNode, Cheerio, Element, load} from 'cheerio';
 import {ILyricsService} from "./ILyricsService";

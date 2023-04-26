@@ -2,6 +2,7 @@ import "dotenv/config"
 import express from "express"
 import cors from "cors"
 import {router} from "./routes"
+import bd from "./config/mongo.db";
 
 const app = express()
 
@@ -11,8 +12,11 @@ app.use(cors())
 app.use(express.json())
 app.use(router)
 
-app.get("/", (req, res) => {
-    res.send("Hola mundo")
-});
+
+//Conexión a la BD
+bd()
+    .then(() => console.log("Conexión a la BD lista"))
+    .catch(e => console.error(`Error al conectar la BD ${e}`))
+
 
 app.listen(PORT, () => console.log(`Escuchando desde el puerto ${PORT}`));

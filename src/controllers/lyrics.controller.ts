@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 import httpStatus from "http-status";
 import {handleHttp} from "../utils/error.handle";
-import {GeniusLyricsService} from "../services/GeniusLyrics.service";
-import {MusixmatchLyricsService} from "../services/MusixmatchLyrics.service";
+import {GeniusLyricsService} from "../services/api_lyrics/GeniusLyrics.service";
+import {MusixmatchLyricsService} from "../services/api_lyrics/MusixmatchLyrics.service";
 
 const getLyricsController = async (req: Request, res: Response) => {
     try {

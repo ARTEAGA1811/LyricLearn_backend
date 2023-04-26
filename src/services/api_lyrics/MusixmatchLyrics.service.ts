@@ -1,7 +1,7 @@
 import axios from "axios";
 import {load} from 'cheerio';
 import {ILyricsService} from "./ILyricsService";
-import {getLyricsUrl} from "../integrations/musixmatch";
+import {getLyricsUrl} from "../../integrations/musixmatch";
 import {GeniusLyricsService} from "./GeniusLyrics.service";
 
 
