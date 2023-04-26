@@ -1,12 +1,17 @@
 import {Request, Response} from "express";
 import httpStatus from "http-status";
 import {handleHttp} from "../utils/error.handle";
-import {getLyrics} from "../services/lyrics.service";
+import {GeniusLyricsService} from "../services/GeniusLyrics.service";
+import {MusixmatchLyricsService} from "../services/MusixmatchLyrics.service";
 
 const getLyricsController = async (req: Request, res: Response) => {
     try {
         const {artistName, title} = req.body;
-        const lyrics = await getLyrics(artistName, title);
+        const musixmatchApi = new MusixmatchLyricsService();
+        const geniusApi = new GeniusLyricsService();
+        //const lyrics = await getLyrics(artistName, title);
+        const lyrics = await geniusApi.getLyrics(artistName, title);
+        //const lyrics = await musixmatchApi.getLyrics(artistName, title);
         res.status(httpStatus.ACCEPTED);
         res.send(lyrics);
     } catch (e) {

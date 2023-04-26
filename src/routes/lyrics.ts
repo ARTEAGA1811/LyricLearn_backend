@@ -3,6 +3,6 @@ import {getLyricsController} from "../controllers/lyrics.controller";
 
 const router = Router()
 
-router.get("/", getLyricsController)
+router.post("/", getLyricsController)
 
 export {router}
