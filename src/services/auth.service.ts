@@ -1,6 +1,7 @@
-import {UserInterface} from "../interfaces/user.interface";
+import {LoginInteface, UserInterface} from "../interfaces/user.interface";
 import UserModel from "../models/userModel";
-import {encrpyt} from "../security/encrypt.handle";
+import {comparePasswords, encrpyt} from "../security/encrypt.handle";
+import {generateToken} from "../security/token.handle";
 
 const registerNewUser = async (myUser: UserInterface) => {
 
@@ -25,4 +26,26 @@ const registerNewUser = async (myUser: UserInterface) => {
 }
 
 
-export {registerNewUser}
+const loginUser = async ({email, password}: LoginInteface) => {
+    //Validar que el usuario exista
+    const userResponse = await UserModel.findOne({email}) as UserInterface
+    if (!userResponse) {
+        throw new Error("The user doesn't exist")
+    }
+
+    //Lo que me trae de la BD es la pass encriptada.
+    const passHash = userResponse.password
+    const isCorrectPass = await comparePasswords(password, passHash)
+    if (!isCorrectPass) {
+        throw new Error("Username or password are incorrect")
+    }
+
+    //Como ya ingresó las credenciales correctas, vamos a hacer que se genere un token de sesión
+    //Vamos a usar el username y el email como identificador único.
+    const token = generateToken(userResponse.username, userResponse.email)
+    console.log("Token: ", token)
+    return token;
+}
+
+
+export {registerNewUser, loginUser}

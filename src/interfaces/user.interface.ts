@@ -5,3 +5,6 @@ export interface UserInterface {
     email: string;
     idSpotify: string;
 }
+
+export interface LoginInteface extends Pick<UserInterface, "email" | "password"> {
+}
