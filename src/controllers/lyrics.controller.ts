@@ -15,7 +15,7 @@ const getLyricsController = async (req: Request, res: Response) => {
         res.status(httpStatus.ACCEPTED);
         res.send(lyrics);
     } catch (e) {
-        handleHttp(res, "ERROR_GET_LYRICS", e);
+        handleHttp(res, "ERROR_GET_LYRICS", e, httpStatus.BAD_REQUEST);
     }
 }
 

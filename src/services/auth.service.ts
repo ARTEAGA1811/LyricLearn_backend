@@ -1,9 +1,9 @@
-import {LoginInteface, UserInterface} from "../interfaces/user.interface";
+import {LoginInteface, RegisterInterface, UserInterface} from "../interfaces/user.interface";
 import UserModel from "../models/userModel";
 import {comparePasswords, encrpyt} from "../security/encrypt.handle";
 import {generateToken} from "../security/token.handle";
 
-const registerNewUser = async (myUser: UserInterface) => {
+const registerNewUser = async (myUser: RegisterInterface) => {
 
     //usamos trim para eliminar los espacios en blanco
     myUser.username = myUser.username.trim()
@@ -14,10 +14,10 @@ const registerNewUser = async (myUser: UserInterface) => {
     //myUser.username = myUser.username.toLowerCase()
 
 
-    const checkExists = await UserModel.findOne({username: myUser.username})
-    if (checkExists) {
-        throw new Error("The user already exists")
-    }
+    // const checkExists = await UserModel.findOne({username: myUser.username})
+    // if (checkExists) {
+    //     throw new Error("The user already exists")
+    // }
 
 
     myUser.password = await encrpyt(myUser.password)

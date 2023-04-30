@@ -1,21 +1,25 @@
 import {Request, Response, NextFunction} from "express"
 import {handleHttp} from "../utils/error.handle";
 import {verifyToken} from "../security/token.handle";
+import httpStatus from "http-status";
 
 const checkTokenSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const tokenInput = req.headers["authorization"]
         if (!tokenInput) {
-            throw new Error("Token not found")
+            const tokenError = new Error("Token not found")
+            handleHttp(res, "TOKEN_NOT_FOUND", tokenError , httpStatus.UNAUTHORIZED)
+            return
         }
 
         const token = tokenInput.split(" ")[1]
         if (!token) {
-            throw new Error("Invalid format token")
+            const tokenError =  new Error("Invalid format token")
+            handleHttp(res, "INVALID_FORMAT_TOKEN", tokenError, httpStatus.UNAUTHORIZED)
         }
 
         //Obtenemos la información del usuario
-        //Si no es válido se lanza una exepción.
+        //Si no es válido se lanza una excepción.
         const infoUser = verifyToken(token)
         console.log(infoUser);
 
@@ -23,7 +27,7 @@ const checkTokenSession = async (req: Request, res: Response, next: NextFunction
 
 
     } catch (e) {
-        handleHttp(res, "ERROR_TOKEN", e)
+        handleHttp(res, "ERROR_TOKEN", e, httpStatus.UNAUTHORIZED)
     }
 }
 
