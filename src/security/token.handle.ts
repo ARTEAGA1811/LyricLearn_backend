@@ -3,9 +3,9 @@ import {sign, verify} from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "no_secret"
 
-const generateToken = (username: string, email: string ) => {
-    const jwtSign = sign({username, email}, JWT_SECRET, {
-        expiresIn: "1h"
+const generateToken = (id: string, expiration: string) => {
+    const jwtSign = sign({id}, JWT_SECRET, {
+        expiresIn: expiration
     })
     return jwtSign;
 }

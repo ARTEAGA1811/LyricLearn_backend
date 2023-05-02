@@ -30,7 +30,7 @@ const loginUser = async ({email, password}: LoginInteface) => {
     //Validar que el usuario exista
     const userResponse = await UserModel.findOne({email}) as UserInterface
     if (!userResponse) {
-        throw new Error("The user doesn't exist")
+        throw new Error("This email is not registered.")
     }
 
     //Lo que me trae de la BD es la pass encriptada.
@@ -40,11 +40,11 @@ const loginUser = async ({email, password}: LoginInteface) => {
         throw new Error("Username or password are incorrect")
     }
 
+
     //Como ya ingresó las credenciales correctas, vamos a hacer que se genere un token de sesión
-    //Vamos a usar el username y el email como identificador único.
-    const token = generateToken(userResponse.username, userResponse.email)
-    console.log("Token: ", token)
-    return token;
+    //Vamos a usar el _id como identificador único.
+    const id = userResponse._id.toString();
+    return generateToken(id, "7d");
 }
 
 

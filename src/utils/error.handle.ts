@@ -11,11 +11,11 @@ const handleHttp = (res: Response, message: string, e: any, code: number) => {
     res.status(code)
     const errorResponse: ErrorResponse = {
         status: code,
-        message: message
+        error: {
+            message: message
+        }
     }
-    res.send({
-        "error": errorResponse
-    })
+    res.send(errorResponse)
 }
 
 

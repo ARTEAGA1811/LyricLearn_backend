@@ -1,9 +1,14 @@
 export interface ErrorResponse {
     status: number;
-    message: string;
+    error: {
+        message: string;
+    }
 }
 
 export interface SuccessResponse {
     status: number;
-    message: string;
+    data: {
+        message: string;
+    }
 }
+
