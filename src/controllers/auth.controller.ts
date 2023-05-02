@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
 import httpStatus from "http-status";
-import {loginUser, registerNewUser} from "../services/auth.service";
+import {checkIfValidToken, loginUser, registerNewUser} from "../services/auth.service";
 import {handleHttp, handleRegisterExceptions, validateParams} from "../utils/error.handle";
 import UserModel from "../models/userModel";
 import {RegisterInterface} from "../interfaces/user.interface";
@@ -34,45 +34,68 @@ const registerCtrl = async ({body}: Request, res: Response) => {
 
 const loginCtrl = async (req: Request, res: Response) => {
     try {
-        const {email, password, remember} = req.body;
-        let cookieMessage = "";
+        const {email, password} = req.body;
         if (!validateParams(email, password)) {
             handleHttp(res, "INCOMPLETE_PARAMS", new Error("INCOMPLETE_PARAMS"), 400)
             return
         }
         const tokenResponse = await loginUser({email, password});
 
-        //Se guarda el token en la cookie solo si el usuario lo solicita
-        if (remember) {
-            res.cookie("token", tokenResponse, {
-                httpOnly: true,
-                secure: true,
-                maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-            })
-            cookieMessage = "COOKIE_CREATED"
-            console.log("cookie created: ", req.cookies.token)
+        //Se guarda el token en la cookie
+        res.cookie("token", tokenResponse, {
+            httpOnly: true,
+            secure: false,
+            maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+        });
 
-        } else {
-            //Se elimina la cookie si el usuario no lo solicita
-            const myCookie = req.cookies.token
-            console.log("cookie gotten: ", myCookie)
-
-            if (myCookie) {
-                res.clearCookie("token")
-                cookieMessage = "COOKIE_DELETED"
-            } else {
-                cookieMessage = "COOKIE_NOT_CREATED_YET"
-            }
-
-        }
-        //console.log("tokenResponse", tokenResponse)
-        console.log("cookieMessage", cookieMessage)
         res.status(202)
         res.send({
             status: 202,
             data: {
                 token: tokenResponse,
-                message: cookieMessage
+                message: "LOGIN_SUCCESS"
+            }
+        })
+    } catch (e: any) {
+        handleHttp(res, e.message, e, 403)
+    }
+}
+
+const logoutCtrl = async (req: Request, res: Response) => {
+    try {
+        res.clearCookie("token")
+        res.status(200)
+        res.send({
+            status: 200,
+            data: {
+                message: "LOGOUT_SUCCESS"
+            }
+        })
+    } catch (e: any) {
+        handleHttp(res, e.message, e, 403)
+    }
+}
+
+const checkTokenCtrl = async (req: Request, res: Response) => {
+    try {
+
+        const {token} = req.body;
+        console.log("token backend: ", token)
+        if (!token) {
+            throw new Error("TOKEN_NOT_FOUND")
+        }
+        const infoUser = checkIfValidToken(token)
+        if (!infoUser) {
+            throw new Error("INVALID_TOKEN")
+        }
+
+        res.status(200)
+        res.send({
+            status: 200,
+            data: {
+                token: token,
+                message: "TOKEN_VALID",
+                user: infoUser
             }
         })
     } catch (e: any) {
@@ -81,4 +104,4 @@ const loginCtrl = async (req: Request, res: Response) => {
 }
 
 
-export {registerCtrl, loginCtrl}
+export {registerCtrl, loginCtrl, checkTokenCtrl, logoutCtrl}

@@ -1,7 +1,8 @@
 import {LoginInteface, RegisterInterface, UserInterface} from "../interfaces/user.interface";
 import UserModel from "../models/userModel";
 import {comparePasswords, encrpyt} from "../security/encrypt.handle";
-import {generateToken} from "../security/token.handle";
+import {generateToken, verifyToken} from "../security/token.handle";
+import {logger} from "../utils/logs.handle";
 
 const registerNewUser = async (myUser: RegisterInterface) => {
 
@@ -44,8 +45,22 @@ const loginUser = async ({email, password}: LoginInteface) => {
     //Como ya ingresó las credenciales correctas, vamos a hacer que se genere un token de sesión
     //Vamos a usar el _id como identificador único.
     const id = userResponse._id.toString();
-    return generateToken(id, "7d");
+    return generateToken(id,userResponse.username, userResponse.email, "7d");
 }
 
+const checkIfValidToken = (token: string) => {
+    try{
+        if (!token) {
+            throw new Error("Token not found")
+        }
+        //Obtenemos la información del usuario
+        //Si no es válido se lanza una excepción.
+        return verifyToken(token)
+    } catch (e: any) {
+        logger.error(e)
+        logger.error(e.message)
+        return false
+    }
+}
 
-export {registerNewUser, loginUser}
+export {registerNewUser, loginUser, checkIfValidToken}

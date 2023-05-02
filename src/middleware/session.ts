@@ -8,14 +8,14 @@ const checkTokenSession = async (req: Request, res: Response, next: NextFunction
         const tokenInput = req.headers["authorization"]
         if (!tokenInput) {
             const tokenError = new Error("Token not found")
-            handleHttp(res, "TOKEN_NOT_FOUND", tokenError , httpStatus.UNAUTHORIZED)
+            handleHttp(res, "TOKEN_NOT_FOUND", tokenError , 401)
             return
         }
 
         const token = tokenInput.split(" ")[1]
         if (!token) {
             const tokenError =  new Error("Invalid format token")
-            handleHttp(res, "INVALID_FORMAT_TOKEN", tokenError, httpStatus.UNAUTHORIZED)
+            handleHttp(res, "INVALID_FORMAT_TOKEN", tokenError, 401)
         }
 
         //Obtenemos la información del usuario
@@ -27,7 +27,7 @@ const checkTokenSession = async (req: Request, res: Response, next: NextFunction
 
 
     } catch (e) {
-        handleHttp(res, "ERROR_TOKEN", e, httpStatus.UNAUTHORIZED)
+        handleHttp(res, "ERROR_TOKEN", e, 401)
     }
 }
 
